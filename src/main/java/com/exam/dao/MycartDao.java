@@ -31,33 +31,13 @@ public class MycartDao {
 	private PreparedStatement pstmt;
 	private ResultSet rs;
 	private int result;
-	
+	Dao dao = new Dao();
+
 	public static synchronized MycartDao getInstance() {
 		if (cDao == null) {
 			cDao = new MycartDao();
 		}
 		return cDao;
-	}
-	
-	public Connection getConnection() {
-
-		String url = "jdbc:oracle:thin:@localhost:1521:xe";
-		String id = "hr", pw = "hr";
-		
-		System.out.println(url);
-		System.out.println(id);
-		System.out.println(pw);
-		
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			con = DriverManager.getConnection(url, id, pw);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		System.out.println("ÄÁ°ª : "+con);
-		return con;
 	}
 	
 	
@@ -87,7 +67,7 @@ public class MycartDao {
 	public int join(MycartDto cDto) {
 		System.out.println(con);
 
-		Connection con = this.getConnection();
+		Connection con = this.dao.getConnection();
 		StringBuffer query = new StringBuffer();
 		query.append("insert into cart").append(" values (?,?, ?, ?, ?)");
 		System.out.println(query.toString());
@@ -119,7 +99,7 @@ public class MycartDao {
 		List<MycartDto> list = new ArrayList<>();
 		
 		try {
-			Connection conn = this.getConnection();
+			Connection conn = this.dao.getConnection();
 			String sql ="SElECT * FROM cart";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
@@ -147,7 +127,7 @@ public class MycartDao {
 	public int delete(MycartDto cDto) {
 		System.out.println(con+"µô¸®Æ® ¿¬°á");
 
-		Connection con = this.getConnection();
+		Connection con = this.dao.getConnection();
 		StringBuffer query = new StringBuffer();
 		query.append("delete cart where Num=1");
 		System.out.println(query.toString());
@@ -171,7 +151,7 @@ public class MycartDao {
 	}
 
 	public int deleteper(MycartDto cDto) {
-		Connection con = this.getConnection();
+		Connection con = this.dao.getConnection();
 		StringBuffer query = new StringBuffer();
 		int Del = cDto.getDelNum();
 	System.out.println(Del+"µ¨");

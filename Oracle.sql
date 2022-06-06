@@ -25,3 +25,17 @@ img varchar2(30),
 title varchar2(30),
 price varchar2(30)
 );
+
+create table jspdbmember (
+	id number ,
+    name varchar2(10) not null,
+    age number
+); 
+
+drop table jspdbmember
+drop table member
+
+
+INSERT INTO jspdbmember values(1,'¼ÛÀ¯Áø', 23);
+
+

@@ -18,11 +18,12 @@ public class MemberDao {
 	private PreparedStatement pstmt;
 	private ResultSet rs;
 	private int result;
-	
+	Dao dao = new Dao();
 	private MemberDao() {
 		
 	}
-
+	
+	
 	public static synchronized MemberDao getInstance() {
 		if (mDao == null) {
 			mDao = new MemberDao();
@@ -30,28 +31,6 @@ public class MemberDao {
 		return mDao;
 	}
 	
-	public Connection getConnection() {
-		
-
-		
-		String url = "jdbc:oracle:thin:@localhost:1521:xe";
-		String id = "hr", pw = "hr";
-		
-		System.out.println(url);
-		System.out.println(id);
-		System.out.println(pw);
-		
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			con = DriverManager.getConnection(url, id, pw);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		System.out.println("컨값 : "+con);
-		return con;
-	}
 	
 	public void close(Connection con, PreparedStatement pstmt, ResultSet rs) {
 		if (rs != null) {
@@ -79,7 +58,7 @@ public class MemberDao {
 
 	public int join(MemberDto mDto) {
 		System.out.println(con);
-		Connection con = this.getConnection();
+		Connection con = this.dao.getConnection();
 		StringBuffer query = new StringBuffer();
 		query.append("insert into member").append(" values (?, ?, ?, ?)");
 		System.out.println(query.toString());
@@ -96,8 +75,6 @@ public class MemberDao {
 			
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println(e);
-			System.out.println("아무거나");
 			e.printStackTrace();
 		
 	
@@ -111,7 +88,7 @@ public class MemberDao {
 	
 	
 public int login(String id, String pw) {
-	con = this.getConnection();
+	con = this.dao.getConnection();
 	StringBuffer query = new StringBuffer();
 	query.append("SELECT pw").append(" FROM member").append(" WHERE ID = ?");
 	try {

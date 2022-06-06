@@ -22,32 +22,14 @@ public class WriteDao {
 	private PreparedStatement pstmt;
 	private ResultSet rs;
 	private int result;
-
+	Dao dao = new Dao();
 	public static synchronized WriteDao getInstance() {
 		if (wDao == null) {
 			wDao = new WriteDao();
 		}
 		return wDao;
 	}
-	
-	public Connection getConnection() {
 
-		String url = "jdbc:oracle:thin:@localhost:1521:xe";
-		String id = "hr", pw = "hr";
-		
-
-		
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			con = DriverManager.getConnection(url, id, pw);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return con;
-	}
-	
 	
 	public void close(Connection con, PreparedStatement pstmt, ResultSet rs) {
 		if (rs != null) {
@@ -74,7 +56,7 @@ public class WriteDao {
 	}
 	public int join(WriteDto wDto) {
 		System.out.println(con);
-		Connection con = this.getConnection();
+		Connection con = this.dao.getConnection();
 		StringBuffer query = new StringBuffer();
 		query.append("insert into Write").append(" values (Write_ID.NEXTVAL,?, ?,TO_CHAR(sysdate,'RRRR-MM-DD HH24:MI:SS'), ?,?)");
 		System.out.println(query.toString());
@@ -105,7 +87,7 @@ public class WriteDao {
 		List<WriteDto> list = new ArrayList<>();
 		
 		try {
-			Connection conn = this.getConnection();
+			Connection conn = this.dao.getConnection();
 			String sql ="SElECT * FROM Write order by idx desc";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
@@ -132,7 +114,7 @@ public class WriteDao {
 		return list;
 	}
 	public int deleteper(WriteDto wDto) {
-		Connection con = this.getConnection();
+		Connection con = this.dao.getConnection();
 		StringBuffer query = new StringBuffer();
 		int idx = wDto.getIdx();
 
@@ -163,7 +145,7 @@ public class WriteDao {
 		int count = 0;
 		String sql = "select count(*) from Write";
 		try {
-			con = getConnection();
+			con = dao.getConnection();
 			pstmt = con.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			if(rs.next()){
@@ -177,7 +159,7 @@ public class WriteDao {
 		return count; // 총 레코드 수 리턴
 	}
 	public int Update(WriteDto wDto){
-		Connection con = this.getConnection();
+		Connection con = this.dao.getConnection();
 		StringBuffer query = new StringBuffer();
 		query.append("UPDATE write SET title=?, CONTENT=? WHERE IDX=?");
 
